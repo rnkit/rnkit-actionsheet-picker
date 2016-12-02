@@ -37,7 +37,7 @@ buck-out
 .gradle
 local.properties
 *.iml
-/android/
+android/pickerview/
 
 # Node
 node_modules
