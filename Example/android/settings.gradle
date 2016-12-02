@@ -1,0 +1,5 @@
+rootProject.name = 'Example'
+
+include ':app'
+include ':rnkit-actionsheet-picker'
+project(':rnkit-actionsheet-picker').projectDir = new File(rootProject.projectDir, '../node_modules/rnkit-actionsheet-picker/android/app')
