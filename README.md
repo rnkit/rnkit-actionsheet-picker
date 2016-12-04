@@ -180,6 +180,11 @@ DataPicker.show({
 
 - [@simamn](mailto:liwei0990@gmail.com) The main author.
 
+## Thanks
+
+[@saiwu-bigkoo](https://github.com/saiwu-bigkoo) - [Android-PickerView](https://github.com/saiwu-bigkoo/Android-PickerView) 仿iOS的PickerView控件，有时间选择和选项选择并支持一二三级联动效果
+[@skywinder](https://github.com/skywinder) - [ActionSheetPicker-3.0](https://github.com/skywinder/ActionSheetPicker-3.0) Quickly reproduce the dropdown UIPickerView / ActionSheet functionality on iOS.
+
 ## Questions
 
 Feel free to [contact me](mailto:liwei0990@gmail.com) or [create an issue](https://github.com/rnkit/rnkit-actionsheet-picker/issues/new)
