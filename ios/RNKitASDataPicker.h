@@ -7,6 +7,7 @@
 //
 
 #import "RCTBridgeModule.h"
+#import "RCTEventEmitter.h"
 
-@interface RNKitASDataPicker : NSObject <RCTBridgeModule>
+@interface RNKitASDataPicker : RCTEventEmitter <RCTBridgeModule>
 @end

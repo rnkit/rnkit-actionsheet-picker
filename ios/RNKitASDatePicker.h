@@ -7,9 +7,8 @@
 //
 
 #import "RCTBridgeModule.h"
-#import "RCTViewManager.h"
+#import "RCTEventEmitter.h"
 
-@interface RNKitASDatePicker : NSObject <RCTBridgeModule>
-
+@interface RNKitASDatePicker : RCTEventEmitter <RCTBridgeModule>
 @end
 

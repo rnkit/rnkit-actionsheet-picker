@@ -12,6 +12,8 @@
 #import "RCTUtils.h"
 #import "RCTEventDispatcher.h"
 
+#import "RCTConvert.h"
+
 @implementation RCTConvert (RNKitASDatePickerModeDate)
 
 RCT_ENUM_CONVERTER(UIDatePickerMode, (@{
@@ -33,6 +35,11 @@ RCT_ENUM_CONVERTER(UIDatePickerMode, (@{
 
 
 RCT_EXPORT_MODULE()
+
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[@"DatePickerEvent"];
+}
 
 - (dispatch_queue_t)methodQueue
 {
@@ -146,8 +153,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
 
     NSString *selectedDateString = [self getStringFromDate:datePicker.date withDatePickerMode:datePicker.datePickerMode];
 
-    [self.bridge.eventDispatcher sendAppEventWithName:@"DatePickerEvent"
-                                                 body:@{@"selectedDate": selectedDateString}];
+    [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": selectedDateString}];
 }
 
 - (NSString *) getStringFromDate: (NSData *)date withDatePickerMode: (UIDatePickerMode) mode

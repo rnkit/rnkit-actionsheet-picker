@@ -24,6 +24,11 @@
 
 RCT_EXPORT_MODULE()
 
+- (NSArray<NSString *> *)supportedEvents
+{
+    return @[@"DataPickerEvent"];
+}
+
 - (dispatch_queue_t)methodQueue
 {
     return dispatch_get_main_queue();
@@ -51,13 +56,13 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
         RCTLogError(@"numberOfComponents is require.");
         return;
     }
-    
+
     if (defaultSelected.count && numberOfComponents != defaultSelected.count) {
         RCTLogError(@"numberOfComponents is not equal to defaultSelected count.");
         return;
     }
-    
-    
+
+
 
     _callback = callback;
 
@@ -95,8 +100,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
 
         NSArray *selectedIndex = [strongSelf getSelctedIndex:picker selectedData:selectedData];
 
-        [strongSelf.bridge.eventDispatcher sendAppEventWithName:@"PickerEvent"
-                                                          body:@{@"selectedData": selectedData, @"selectedIndex": selectedIndex}];
+        [strongSelf sendEventWithName:@"DataPickerEvent" body:@{@"selectedData": selectedData, @"selectedIndex": selectedIndex}];
 
     } origin:presentingController.view];
 
@@ -112,12 +116,12 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
         picker.defaultSelected = defaultSelected;
     } else {
         NSMutableArray *dv = [NSMutableArray arrayWithCapacity:numberOfComponents];
-        
+
         if (numberOfComponents == 1) {
             NSString *str = dataSource[0];
             [dv addObject:str];
         }
-        
+
         if (numberOfComponents == 2) {
             NSDictionary *dic = dataSource[0];
             NSString *item1 = dic.allKeys.firstObject;
@@ -125,17 +129,17 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
             NSString *item2 = dic[item1][0];
             [dv addObject: item2];
         }
-        
+
         if (numberOfComponents == 3) {
             NSDictionary *dic = dataSource[0];
             NSString *item1 = dic.allKeys.firstObject;
             [dv addObject:item1];
-            
+
             NSArray *arr = [dic objectForKey:item1];
             NSDictionary *d = arr[0];
             NSString *item2 = d.allKeys.firstObject;
             [dv addObject: item2];
-            
+
             NSArray *item3 = [d objectForKey:item2][0];
             [dv addObject: item3];
         }
