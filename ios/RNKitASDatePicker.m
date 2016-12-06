@@ -18,7 +18,7 @@ RCT_ENUM_CONVERTER(UIDatePickerMode, (@{
     @"time": @(UIDatePickerModeTime),
     @"date": @(UIDatePickerModeDate),
     @"datetime": @(UIDatePickerModeDateAndTime),
-    @"countdown": @(UIDatePickerModeCountDownTimer),
+    @"countdown": @(UIDatePickerModeCountDownTimer), // not supported yet
 }), UIDatePickerModeDate, integerValue)
 
 @end
@@ -88,7 +88,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
                                          if (!strongSelf) {
                                              return;
                                          }
-                                         NSString *selectedDateString = [strongSelf getStringFromDate:selectedDate];
+                                         NSString *selectedDateString = [strongSelf getStringFromDate:selectedDate withDatePickerMode:datePickerMode];
 
                                          callback(@[@{@"type": @"done", @"selectedDate": selectedDateString}]);
     } cancelBlock:^(ActionSheetDatePicker *picker) {
@@ -144,13 +144,13 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
         return;
     UIDatePicker *datePicker = (UIDatePicker *)sender;
 
-    NSString *selectedDateString = [self getStringFromDate:datePicker.date];
+    NSString *selectedDateString = [self getStringFromDate:datePicker.date withDatePickerMode:datePicker.datePickerMode];
 
     [self.bridge.eventDispatcher sendAppEventWithName:@"DatePickerEvent"
                                                  body:@{@"selectedDate": selectedDateString}];
 }
 
-- (NSString *) getStringFromDate: (NSData *)date
+- (NSString *) getStringFromDate: (NSData *)date withDatePickerMode: (UIDatePickerMode) mode
 {
     if (!date) {
         return @"";
@@ -160,7 +160,28 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         formatter = [NSDateFormatter new];
-        formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+
+        if (mode == UIDatePickerModeDate) {
+
+        }
+        switch (mode) {
+            case UIDatePickerModeDate: {
+                formatter.dateFormat = @"yyyy-MM-dd";
+            }
+                break;
+            case UIDatePickerModeTime: {
+                formatter.dateFormat = @"HH:mm:ss";
+            }
+                break;
+            case UIDatePickerModeDateAndTime: {
+                formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            }
+                break;
+            default:
+                formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+                break;
+        }
+
     });
 
     NSString *dateString = [formatter stringFromDate:date];

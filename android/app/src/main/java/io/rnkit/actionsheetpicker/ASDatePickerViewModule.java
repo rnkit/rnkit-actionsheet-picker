@@ -99,7 +99,16 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 pvTime.setOnTimeSelectListener(new DatePickerView.OnTimeSelectListener() {
                     @Override
                     public void onTimeSelect(Date date) {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+                        SimpleDateFormat format = null;
+
+                        if (datePickerMode == DatePickerView.Type.YEAR_MONTH_DAY) {
+                            format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+                        } else if (datePickerMode == DatePickerView.Type.HOURS_MINS) {
+                            format = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
+                        } else if (datePickerMode == DatePickerView.Type.ALL) {
+                            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+                        }
+
                         format.setTimeZone(TimeZone.getTimeZone("GMT+08"));
 
                         WritableMap map = Arguments.createMap();
