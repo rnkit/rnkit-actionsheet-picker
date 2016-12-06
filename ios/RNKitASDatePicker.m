@@ -135,7 +135,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     });
 
     NSData *date = [formatter dateFromString:json];
-    return nil;
+    return date;
 }
 
 - (void)eventForDatePicker:(id)sender
