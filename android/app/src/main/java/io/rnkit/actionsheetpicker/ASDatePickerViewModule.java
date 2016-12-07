@@ -68,7 +68,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
 
                 Bundle args = createFragmentArguments(options);
 
-                DatePickerView.Type datePickerMode = getDatePickerType(args.getString(DATEPICKER_MODE));
+                final DatePickerView.Type datePickerMode = getDatePickerType(args.getString(DATEPICKER_MODE));
 
                 DatePickerView pvTime = new DatePickerView(activity, datePickerMode);
 

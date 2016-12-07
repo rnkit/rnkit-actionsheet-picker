@@ -31,6 +31,13 @@ npm-debug.log
 .idea
 *.iml
 
+# Gradle
+/build/
+/Example/**/android/app/build/
+/Example/**/android/app/gradle/
+/Example/**/android/app/gradlew
+/Example/**/android/app/gradlew.bat
+
 # Android
 local.properties
 .gradle/
