@@ -114,7 +114,7 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
 
                 pvOptions.setCyclic(false, false, false);
 
-                pvOptions.setSelectOptions(0, 0, 0);
+                pvOptions.setSelectOptions(option1, option2, option3);
 
                 TextView titleView = pvOptions.getTitle();
                 titleView.setText(args.getString(TITLE_TEXT));
