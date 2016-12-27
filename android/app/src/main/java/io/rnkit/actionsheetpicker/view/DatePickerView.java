@@ -16,7 +16,15 @@ import io.rnkit.actionsheetpicker.R;
 
 public class DatePickerView extends TimePickerView implements DefaultHardwareBackBtnHandler{
 
-    private TextView btnSubmit, btnCancel, tvTitle;
+    private TextView btnSubmit;
+    private TextView btnCancel;
+    private TextView tvTitle;
+    private TextView year;
+    private TextView month;
+    private TextView day;
+    private TextView hours;
+    private TextView minutes;
+
     private static final String TAG_SUBMIT = "submit";
     private static final String TAG_CANCEL = "cancel";
     private OnTimeCancelListener timeCancelListener;
@@ -29,10 +37,8 @@ public class DatePickerView extends TimePickerView implements DefaultHardwareBac
         tvTitle = (TextView) findViewById(R.id.tvTitle);
 
         btnCancel.setTextSize(15);
-
         btnSubmit.setTextSize(15);
         btnSubmit.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
-
         tvTitle.setTextSize(18);
 
         year =(TextView) findViewById(R.id.year);
