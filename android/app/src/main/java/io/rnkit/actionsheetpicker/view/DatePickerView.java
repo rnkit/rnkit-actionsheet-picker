@@ -34,6 +34,12 @@ public class DatePickerView extends TimePickerView implements DefaultHardwareBac
         btnSubmit.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
 
         tvTitle.setTextSize(18);
+
+        year =(TextView) findViewById(R.id.year);
+        month = (TextView) findViewById(R.id.month);
+        day = (TextView) findViewById(R.id.day);
+        hours = (TextView) findViewById(R.id.hour);
+        minutes = (TextView) findViewById(R.id.min);
     }
 
     @Override
@@ -72,6 +78,26 @@ public class DatePickerView extends TimePickerView implements DefaultHardwareBac
 
     public TextView getTitle() {
         return this.tvTitle;
+    }
+
+    public TextView getMinutes() {
+        return minutes;
+    }
+
+    public TextView getYear() {
+        return year;
+    }
+
+    public TextView getMonth() {
+        return month;
+    }
+
+    public TextView getDay() {
+        return day;
+    }
+
+    public TextView getHours() {
+        return hours;
     }
 
     @Override

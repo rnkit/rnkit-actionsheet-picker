@@ -40,6 +40,12 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
     /* package */ static final String CANCEL_TEXT = "cancelText";
     /* package */ static final String CANCEL_TEXT_COLOR = "cancelTextColor";
 
+    /* package */ static final String YEAR_TEXT = "yearText";
+    /* package */ static final String MONTH_TEXT = "monthText";
+    /* package */ static final String DAY_TEXT = "dayText";
+    /* package */ static final String HOURS_TEXT = "hoursText";
+    /* package */ static final String MINUTES_TEXT = "minutesText";
+
     /* package */ static final String SELECTED_DATE = "selectedDate";
     /* package */ static final String MINIMUM_DATE = "minimumDate";
     /* package */ static final String MAXIMUM_DATE = "maximumDate";
@@ -93,6 +99,12 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 TextView cancelButton = pvTime.getCancelButton();
                 cancelButton.setText(args.getString(CANCEL_TEXT));
                 cancelButton.setTextColor(args.getInt(CANCEL_TEXT_COLOR));
+
+                pvTime.getYear().setText(args.getString(YEAR_TEXT));
+                pvTime.getMonth().setText(args.getString(MONTH_TEXT));
+                pvTime.getDay().setText(args.getString(DAY_TEXT));
+                pvTime.getHours().setText(args.getString(HOURS_TEXT));
+                pvTime.getMinutes().setText(args.getString(MINUTES_TEXT));
 
                 pvTime.setCancelable(true);
 
@@ -211,6 +223,23 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
 
         if (options.hasKey(DATEPICKER_MODE) && !options.isNull(DATEPICKER_MODE)) {
             args.putString(DATEPICKER_MODE, options.getString(DATEPICKER_MODE));
+        }
+
+        if (options.hasKey(YEAR_TEXT) && !options.isNull(YEAR_TEXT)) {
+            args.putString(YEAR_TEXT, options.getString(YEAR_TEXT));
+        }
+
+        if (options.hasKey(MONTH_TEXT) && !options.isNull(MONTH_TEXT)) {
+            args.putString(MONTH_TEXT, options.getString(MONTH_TEXT));
+        }
+        if (options.hasKey(DAY_TEXT) && !options.isNull(DAY_TEXT)) {
+            args.putString(DAY_TEXT, options.getString(DAY_TEXT));
+        }
+        if (options.hasKey(HOURS_TEXT) && !options.isNull(HOURS_TEXT)) {
+            args.putString(HOURS_TEXT, options.getString(HOURS_TEXT));
+        }
+        if (options.hasKey(MINIMUM_DATE) && !options.isNull(MINIMUM_DATE)) {
+            args.putString(MINIMUM_DATE, options.getString(MINIMUM_DATE));
         }
 
         return args;

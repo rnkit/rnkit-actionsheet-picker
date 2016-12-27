@@ -3,7 +3,7 @@
   "description": "React Native ActionSheetPicker component for iOS + Android",
   "main": "index.js",
   "author": "SimMan <liwei0990@gmail.com>",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "homepage": "https://github.com/rnkit/rnkit-actionsheet-picker",
   "bugs": "https://github.com/rnkit/rnkit-actionsheet-picker/issues",
   "repository": {

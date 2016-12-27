@@ -169,6 +169,11 @@ DataPicker.show({
 | doneTextColor | string | '#269ff7' |  |
 | cancelText | string | '选择时间' | |
 | cancelTextColor | string | '#269ff7' |  |
+| yearText | string | '年' | android only |
+| monthText | string | '月' | android only |
+| dayText | string | '日' | android only |
+| hoursText | string | '时' | android only |
+| minutesText | string | '分' | android only |
 | numberOfComponents | int | 1 |  |
 | dataSource | array |  |  |
 | defaultSelected | array |  |  |
