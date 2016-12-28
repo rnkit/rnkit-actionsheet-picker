@@ -100,11 +100,11 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 cancelButton.setText(args.getString(CANCEL_TEXT));
                 cancelButton.setTextColor(args.getInt(CANCEL_TEXT_COLOR));
 
-                pvTime.getYear().setText(args.getString(YEAR_TEXT));
-                pvTime.getMonth().setText(args.getString(MONTH_TEXT));
-                pvTime.getDay().setText(args.getString(DAY_TEXT));
-                pvTime.getHours().setText(args.getString(HOURS_TEXT));
-                pvTime.getMinutes().setText(args.getString(MINUTES_TEXT));
+                pvTime.getYear().setLabel(args.getString(YEAR_TEXT));
+                pvTime.getMonth().setLabel(args.getString(MONTH_TEXT));
+                pvTime.getDay().setLabel(args.getString(DAY_TEXT));
+                pvTime.getHours().setLabel(args.getString(HOURS_TEXT));
+                pvTime.getMinutes().setLabel(args.getString(MINUTES_TEXT));
 
                 pvTime.setCancelable(true);
 
