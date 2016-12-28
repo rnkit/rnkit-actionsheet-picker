@@ -41,6 +41,11 @@ export default class Example extends Component {
 
   datePickerAction() {
     DatePicker.show({
+      yearText: 'Y',
+      monthText: '月',
+      dayText: 'D',
+      hourText: 'H',
+      minutesText: 'M',
       datePickerMode: this.state.datePickerMode,
       onPickerConfirm: (selectedDate) => {
         console.log(selectedDate);
