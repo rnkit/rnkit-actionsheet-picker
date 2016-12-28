@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.bigkoo.pickerview.lib.WheelView;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 
 import io.rnkit.actionsheetpicker.R;
@@ -19,11 +20,11 @@ public class DatePickerView extends TimePickerView implements DefaultHardwareBac
     private TextView btnSubmit;
     private TextView btnCancel;
     private TextView tvTitle;
-    private TextView year;
-    private TextView month;
-    private TextView day;
-    private TextView hours;
-    private TextView minutes;
+    private WheelView year;
+    private WheelView month;
+    private WheelView day;
+    private WheelView hours;
+    private WheelView minutes;
 
     private static final String TAG_SUBMIT = "submit";
     private static final String TAG_CANCEL = "cancel";
@@ -41,11 +42,11 @@ public class DatePickerView extends TimePickerView implements DefaultHardwareBac
         btnSubmit.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
         tvTitle.setTextSize(18);
 
-        year =(TextView) findViewById(R.id.year);
-        month = (TextView) findViewById(R.id.month);
-        day = (TextView) findViewById(R.id.day);
-        hours = (TextView) findViewById(R.id.hour);
-        minutes = (TextView) findViewById(R.id.min);
+        year =(WheelView) findViewById(R.id.year);
+        month = (WheelView) findViewById(R.id.month);
+        day = (WheelView) findViewById(R.id.day);
+        hours = (WheelView) findViewById(R.id.hour);
+        minutes = (WheelView) findViewById(R.id.min);
     }
 
     @Override
@@ -86,23 +87,23 @@ public class DatePickerView extends TimePickerView implements DefaultHardwareBac
         return this.tvTitle;
     }
 
-    public TextView getMinutes() {
+    public WheelView getMinutes() {
         return minutes;
     }
 
-    public TextView getYear() {
+    public WheelView getYear() {
         return year;
     }
 
-    public TextView getMonth() {
+    public WheelView getMonth() {
         return month;
     }
 
-    public TextView getDay() {
+    public WheelView getDay() {
         return day;
     }
 
-    public TextView getHours() {
+    public WheelView getHours() {
         return hours;
     }
 
