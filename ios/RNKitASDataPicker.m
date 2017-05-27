@@ -8,10 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
-#import "RNKitASDataPicker.h"
+#if __has_include(<React/RCTBridge.h>)
+#import <React/RCTEventEmitter.h>
+#import <React/RCTUtils.h>
+#import <React/RCTConvert.h>
+#import <React/RCTEventDispatcher.h>
+#else
+#import "RCTEventEmitter.h"
 #import "RCTUtils.h"
 #import "RCTConvert.h"
 #import "RCTEventDispatcher.h"
+#endif
+
+#import "RNKitASDataPicker.h"
 #import "ActionSheetDataPicker.h"
 
 @implementation RNKitASDataPicker
@@ -158,7 +167,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
 
 - (NSArray *) getSelctedIndex:(ActionSheetDataPicker *)picker selectedData:(NSArray *)selectedData
 {
-    NSInteger *dataCount = selectedData.count;
+    NSInteger dataCount = selectedData.count;
     NSMutableArray *selectedIndexArray = [NSMutableArray arrayWithCapacity:dataCount];
 
     __block NSInteger count = 0;

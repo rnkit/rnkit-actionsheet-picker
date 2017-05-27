@@ -7,12 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
+
+#if __has_include(<React/RCTBridge.h>)
+#import <React/RCTEventEmitter.h>
+#import <React/RCTUtils.h>
+#import <React/RCTConvert.h>
+#import <React/RCTEventDispatcher.h>
+#else
+#import "RCTEventEmitter.h"
+#import "RCTUtils.h"
+#import "RCTConvert.h"
+#import "RCTEventDispatcher.h"
+#endif
+
 #import "RNKitASDatePicker.h"
 #import "ActionSheetDatePicker.h"
-#import "RCTUtils.h"
-#import "RCTEventDispatcher.h"
-
-#import "RCTConvert.h"
 
 @implementation RCTConvert (RNKitASDatePickerModeDate)
 
@@ -66,7 +75,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     NSDate *minimumDate                 = [self getDateFromString:[RCTConvert NSString:args[@"minimumDate"]]];
     NSDate *maximumDate                 = [self getDateFromString:[RCTConvert NSString:args[@"maximumDate"]]];
 
-    UIDatePickerMode *datePickerMode    = [RCTConvert UIDatePickerMode:args[@"datePickerMode"]];
+    UIDatePickerMode datePickerMode    = [RCTConvert UIDatePickerMode:args[@"datePickerMode"]];
 
     _callback = callback;
 
@@ -141,7 +150,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
     });
 
-    NSData *date = [formatter dateFromString:json];
+    NSDate *date = [formatter dateFromString:json];
     return date;
 }
 
@@ -156,7 +165,7 @@ RCT_EXPORT_METHOD(showWithArgs:(NSDictionary *)args callback:(RCTResponseSenderB
     [self sendEventWithName:@"DatePickerEvent" body:@{@"selectedDate": selectedDateString}];
 }
 
-- (NSString *) getStringFromDate: (NSData *)date withDatePickerMode: (UIDatePickerMode) mode
+- (NSString *) getStringFromDate: (NSDate *)date withDatePickerMode: (UIDatePickerMode) mode
 {
     if (!date) {
         return @"";
