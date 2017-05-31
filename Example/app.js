@@ -54,10 +54,15 @@ export default class Example extends Component {
         })
       },
       onPickerCancel: () => {
-        console.log('date picker canceled');
+        this.setState({
+          date: 'date picker canceled'
+        })
       },
       onPickerDidSelect: (selectedDate) => {
         console.log(selectedDate);
+        this.setState({
+          date: selectedDate
+        })
       }
     })
   }
@@ -77,10 +82,14 @@ export default class Example extends Component {
         })
       },
       onPickerCancel: () => {
-        console.log('data picker canceled');
+        this.setState({
+          data: 'data picker canceled'
+        })
       },
       onPickerDidSelect: (selectedData, selectedIndex) => {
-        console.log(selectedData, selectedIndex);
+        this.setState({
+          data: selectedData
+        })
       }
     })
   }

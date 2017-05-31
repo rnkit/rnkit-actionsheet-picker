@@ -8,8 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.bigkoo.pickerview.OptionsPickerView;
+import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.bigkoo.pickerview.model.IPickerViewData;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
@@ -42,6 +42,7 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
     private static final String REACT_CLASS = "RNKitASDataPicker";
     private static final String ERROR_NO_ACTIVITY = "E_NO_ACTIVITY";
     final ReactApplicationContext reactContext;
+    private static Boolean isCallBack = false;
 
     private ArrayList<ProvinceBean> options1Items = new ArrayList<>();
     private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
@@ -73,7 +74,7 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
 
     @ReactMethod
     public void showWithArgs(@Nullable final ReadableMap options, @Nullable final Callback callback) {
-
+        isCallBack = false;
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -134,6 +135,7 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
                 pvOptions.setOnoptionsSelectListener(new DataPickerView.OnOptionsSelectListener() {
                     @Override
                     public void onOptionsSelect(int option1, int option2, int option3) {
+                        isCallBack = true;
 
                         WritableMap map = Arguments.createMap();
                         map.putString("type", "done");
@@ -168,6 +170,7 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
                 pvOptions.setOnTimeCancelListener(new DataPickerView.OnTimeCancelListener() {
                     @Override
                     public void onCancel() {
+                        isCallBack = true;
 
                         WritableMap map = Arguments.createMap();
                         map.putString("type", "cancel");
@@ -178,11 +181,15 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
                 pvOptions.setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss(Object o) {
-                        WritableMap map = Arguments.createMap();
-                        map.putString("type", "cancel");
-                        callback.invoke(map);
+                        if (!isCallBack) {
+                            isCallBack = true;
+                            WritableMap map = Arguments.createMap();
+                            map.putString("type", "cancel");
+                            callback.invoke(map);
+                        }
                     }
                 });
+
                 pvOptions.show();
             }
         });

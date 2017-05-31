@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.listener.OnDismissListener;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
@@ -33,6 +33,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
     private static final String REACT_CLASS = "RNKitASDatePicker";
     private static final String ERROR_NO_ACTIVITY = "E_NO_ACTIVITY";
     final ReactApplicationContext reactContext;
+    private static Boolean isCallBack = false;
 
     /* package */ static final String TITLE_TEXT = "titleText";
     /* package */ static final String TITLE_TEXT_COLOR = "titleTextColor";
@@ -64,7 +65,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
 
     @ReactMethod
     public void showWithArgs(@Nullable final ReadableMap options, @Nullable final Callback callback) {
-
+        isCallBack = false;
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -112,6 +113,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 pvTime.setOnTimeSelectListener(new DatePickerView.OnTimeSelectListener() {
                     @Override
                     public void onTimeSelect(Date date) {
+                        isCallBack = true;
                         SimpleDateFormat format = null;
 
                         if (datePickerMode == DatePickerView.Type.YEAR_MONTH_DAY) {
@@ -135,7 +137,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 pvTime.setOnTimeCancelListener(new DatePickerView.OnTimeCancelListener() {
                     @Override
                     public void onCancel() {
-
+                        isCallBack = true;
                         WritableMap map = Arguments.createMap();
                         map.putString("type", "cancel");
                         callback.invoke(map);
@@ -145,9 +147,12 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 pvTime.setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss(Object o) {
-                        WritableMap map = Arguments.createMap();
-                        map.putString("type", "cancel");
-                        callback.invoke(map);
+                        if (!isCallBack) {
+                            isCallBack = true;
+                            WritableMap map = Arguments.createMap();
+                            map.putString("type", "cancel");
+                            callback.invoke(map);
+                        }
                     }
                 });
                 pvTime.show();
