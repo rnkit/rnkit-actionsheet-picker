@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.bigkoo.pickerview.model.IPickerViewData;
 import com.facebook.react.bridge.Arguments;
@@ -20,18 +17,15 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
-import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import io.rnkit.actionsheetpicker.bean.PickerViewData;
 import io.rnkit.actionsheetpicker.bean.ProvinceBean;
 import io.rnkit.actionsheetpicker.view.DataPickerView;
-import io.rnkit.actionsheetpicker.view.DatePickerView;
 
 /**
  * Created by SimMan on 2016/11/30.

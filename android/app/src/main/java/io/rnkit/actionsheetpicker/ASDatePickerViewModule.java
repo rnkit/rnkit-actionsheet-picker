@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 
-
+import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
@@ -155,6 +155,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                         }
                     }
                 });
+
                 pvTime.show();
             }
         });
