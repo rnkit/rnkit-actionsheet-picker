@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.model.IPickerViewData;
 import com.facebook.react.bridge.Arguments;
@@ -168,6 +169,15 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
                     @Override
                     public void onCancel() {
 
+                        WritableMap map = Arguments.createMap();
+                        map.putString("type", "cancel");
+                        callback.invoke(map);
+                    }
+                });
+
+                pvOptions.setOnDismissListener(new OnDismissListener() {
+                    @Override
+                    public void onDismiss(Object o) {
                         WritableMap map = Arguments.createMap();
                         map.putString("type", "cancel");
                         callback.invoke(map);
