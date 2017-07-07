@@ -1,6 +1,5 @@
 package io.rnkit.actionsheetpicker.view;
 
-import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -26,12 +25,13 @@ public class DatePickerView extends TimePickerView implements DefaultHardwareBac
     private WheelView hours;
     private WheelView minutes;
 
+
     private static final String TAG_SUBMIT = "submit";
     private static final String TAG_CANCEL = "cancel";
     private OnTimeCancelListener timeCancelListener;
 
-    public DatePickerView(Context context, Type type) {
-        super(context, type);
+    public DatePickerView(Builder builder) {
+        super(builder);
 
         btnSubmit = (TextView) findViewById(R.id.btnSubmit);
         btnCancel = (TextView) findViewById(R.id.btnCancel);

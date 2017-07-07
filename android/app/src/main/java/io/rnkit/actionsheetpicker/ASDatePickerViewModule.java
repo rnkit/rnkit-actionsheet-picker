@@ -1,11 +1,14 @@
 package io.rnkit.actionsheetpicker;
+
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.TextView;
+import android.view.View;
 
-
+import com.bigkoo.pickerview.TimePickerView;
+import com.bigkoo.pickerview.lib.WheelView;
+import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
@@ -18,6 +21,7 @@ import com.facebook.react.bridge.WritableMap;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -35,6 +39,8 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
     final ReactApplicationContext reactContext;
     private static Boolean isCallBack = false;
 
+    private TimePickerView.Builder pickerBuilder;
+
     /* package */ static final String TITLE_TEXT = "titleText";
     /* package */ static final String TITLE_TEXT_COLOR = "titleTextColor";
     /* package */ static final String DONE_TEXT = "doneText";
@@ -42,11 +48,27 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
     /* package */ static final String CANCEL_TEXT = "cancelText";
     /* package */ static final String CANCEL_TEXT_COLOR = "cancelTextColor";
 
+    /* package */ static final String WHEEL_BG_COLOR = "wheelBgColor";
+    /* package */ static final String TITLE_BG_COLOR = "titleBgColor";
+    /* package */ static final String DONE_CANCEL_SIZE = "doneCancelSize";
+    /* package */ static final String TITLE_SIZE = "titleSize";
+    /* package */ static final String CONTENT_SIZE = "contentSize";
+    /* package */ static final String CANCEL_ENABLE = "cancelEnabel";
+    /* package */ static final String IS_CENTER_LABEL = "isCenterLable";
+    /* package */ static final String OUT_TEXT_COLOR = "outTextColor";
+    /* package */ static final String CENTER_TEXT_COLOR = "centerTextColor";
+    /* package */ static final String DIVIDER_COLOR = "dividerColor";
+    /* package */ static final String SHADE_BG_COLOR = "shadeBgColor";
+    /* package */ static final String LINE_SPACING_MULTIPLIER = "lineSpacingMultiplier";
+    /* package */ static final String DIVIDER_TYPE = "dividerType";
+    /* package */ static final String IS_CYCLIC = "isCyclic";
+
     /* package */ static final String YEAR_TEXT = "yearText";
     /* package */ static final String MONTH_TEXT = "monthText";
     /* package */ static final String DAY_TEXT = "dayText";
     /* package */ static final String HOURS_TEXT = "hoursText";
     /* package */ static final String MINUTES_TEXT = "minutesText";
+    /* package */ static final String SECONDS_TEXT = "secondsText";
 
     /* package */ static final String SELECTED_DATE = "selectedDate";
     /* package */ static final String MINIMUM_DATE = "minimumDate";
@@ -73,54 +95,19 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 if (activity == null) {
                     throw new JSApplicationIllegalArgumentException("Tried to open a Picker dialog while not attached to an Activity");
                 }
-
-                Bundle args = createFragmentArguments(options);
-
-                final DatePickerView.Type datePickerMode = getDatePickerType(args.getString(DATEPICKER_MODE));
-
-                DatePickerView pvTime = new DatePickerView(activity, datePickerMode);
-
-                pvTime.setRange(args.getInt(MINIMUM_DATE), args.getInt(MAXIMUM_DATE));
-
-                if (args.get(SELECTED_DATE) != null) {
-                    pvTime.setTime((Date) args.get(SELECTED_DATE));
-                } else {
-                    pvTime.setTime(new Date());
-                }
-
-                pvTime.setCyclic(false);
-
-                TextView titleView = pvTime.getTitle();
-                titleView.setText(args.getString(TITLE_TEXT));
-                titleView.setTextColor(args.getInt(TITLE_TEXT_COLOR));
-
-                TextView doneButton = pvTime.getSubmitButton();
-                doneButton.setText(args.getString(DONE_TEXT));
-                doneButton.setTextColor(args.getInt(DONE_TEXT_COLOR));
-
-                TextView cancelButton = pvTime.getCancelButton();
-                cancelButton.setText(args.getString(CANCEL_TEXT));
-                cancelButton.setTextColor(args.getInt(CANCEL_TEXT_COLOR));
-
-                pvTime.getYear().setLabel(args.getString(YEAR_TEXT));
-                pvTime.getMonth().setLabel(args.getString(MONTH_TEXT));
-                pvTime.getDay().setLabel(args.getString(DAY_TEXT));
-                pvTime.getHours().setLabel(args.getString(HOURS_TEXT));
-                pvTime.getMinutes().setLabel(args.getString(MINUTES_TEXT));
-
-                pvTime.setCancelable(true);
-
-                pvTime.setOnTimeSelectListener(new DatePickerView.OnTimeSelectListener() {
+                final String datePickerMode = options.getString(DATEPICKER_MODE);
+                pickerBuilder = new TimePickerView.Builder(activity, new DatePickerView.OnTimeSelectListener() {
                     @Override
-                    public void onTimeSelect(Date date) {
+                    public void onTimeSelect(Date date, View v) {
                         isCallBack = true;
                         SimpleDateFormat format = null;
-
-                        if (datePickerMode == DatePickerView.Type.YEAR_MONTH_DAY) {
+                        if (datePickerMode==null){
                             format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
-                        } else if (datePickerMode == DatePickerView.Type.HOURS_MINS) {
+                        } else if (datePickerMode.equals("date")) {
+                            format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+                        } else if (datePickerMode.equals("time")) {
                             format = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
-                        } else if (datePickerMode == DatePickerView.Type.ALL) {
+                        } else if (datePickerMode.equals("dateTime")) {
                             format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
                         }
 
@@ -133,6 +120,14 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                         callback.invoke(map);
                     }
                 });
+                Bundle args = createFragmentArguments(options);
+                pickerBuilder.setLabel(args.getString(YEAR_TEXT),args.getString(MONTH_TEXT),args.getString(DAY_TEXT)
+                                ,args.getString(HOURS_TEXT),args.getString(MINUTES_TEXT),args.getString(SECONDS_TEXT));
+                pickerBuilder.setType(getDatePickerType(datePickerMode));
+
+                DatePickerView pvTime = new DatePickerView(pickerBuilder);
+
+
 
                 pvTime.setOnTimeCancelListener(new DatePickerView.OnTimeCancelListener() {
                     @Override
@@ -155,60 +150,60 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                         }
                     }
                 });
+
                 pvTime.show();
             }
         });
     }
 
-    private DatePickerView.Type getDatePickerType(String type) {
-        if (type == null) {
-            return DatePickerView.Type.YEAR_MONTH_DAY;
+    private boolean[] getDatePickerType(String type) {
+        if (type==null)
+            return new boolean[]{true,true,true,true,true,true};
+        else if (type.equals("time")) {
+            return new boolean[]{false,false,false,true,true,true};
+        }else if (type.equals("date")) {
+            return new boolean[]{true,true,true,false,false,false};
+        }else if (type.equals("datetime")) {
+            return new boolean[]{true,true,true,true,true,true};
         }
-        if (type.equals("time")) {
-            return DatePickerView.Type.HOURS_MINS;
-        }
-
-        if (type.equals("date")) {
-            return DatePickerView.Type.YEAR_MONTH_DAY;
-        }
-
-        if (type.equals("datetime")) {
-            return DatePickerView.Type.ALL;
-        }
-        return DatePickerView.Type.YEAR_MONTH_DAY;
+        return new boolean[]{true,true,true,true,true,true};
     }
 
     private Bundle createFragmentArguments(ReadableMap options) {
 
         final Bundle args = new Bundle();
+        Calendar startDate = null,endDate=null;
 
         if (options.hasKey(TITLE_TEXT) && !options.isNull(TITLE_TEXT)) {
-            args.putString(TITLE_TEXT, options.getString(TITLE_TEXT));
+            pickerBuilder.setTitleText(options.getString(TITLE_TEXT));
         }
         if (options.hasKey(TITLE_TEXT_COLOR) && !options.isNull(TITLE_TEXT_COLOR)) {
-            args.putInt(TITLE_TEXT_COLOR, options.getInt(TITLE_TEXT_COLOR)); // Color.parseColor()
+            pickerBuilder.setTitleColor(options.getInt(TITLE_TEXT_COLOR));
         }
 
         if (options.hasKey(DONE_TEXT) && !options.isNull(DONE_TEXT)) {
             args.putString(DONE_TEXT, options.getString(DONE_TEXT));
+            pickerBuilder.setSubmitText(options.getString(DONE_TEXT));
         }
         if (options.hasKey(DONE_TEXT_COLOR) && !options.isNull(DONE_TEXT_COLOR)) {
-            args.putInt(DONE_TEXT_COLOR, options.getInt(DONE_TEXT_COLOR)); // Color.parseColor()
+            pickerBuilder.setSubmitColor(options.getInt(DONE_TEXT_COLOR));
         }
 
         if (options.hasKey(CANCEL_TEXT) && !options.isNull(CANCEL_TEXT)) {
             args.putString(CANCEL_TEXT, options.getString(CANCEL_TEXT));
+            pickerBuilder.setCancelText(options.getString(CANCEL_TEXT));
         }
         if (options.hasKey(CANCEL_TEXT_COLOR) && !options.isNull(CANCEL_TEXT_COLOR)) {
-            args.putInt(CANCEL_TEXT_COLOR, options.getInt(CANCEL_TEXT_COLOR)); // Color.parseColor()
+            pickerBuilder.setCancelColor(options.getInt(CANCEL_TEXT_COLOR));
         }
 
         if (options.hasKey(SELECTED_DATE) && !options.isNull(SELECTED_DATE)) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
                 format.setTimeZone(TimeZone.getTimeZone("GMT+08"));
-                Date date = format.parse(options.getString(SELECTED_DATE));
-                args.putSerializable(SELECTED_DATE, date);
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+08"));
+                calendar.setTime(format.parse(options.getString(SELECTED_DATE)));
+                pickerBuilder.setDate(calendar);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -219,7 +214,8 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 SimpleDateFormat format = new SimpleDateFormat("yyyy", Locale.CHINA);
                 format.setTimeZone(TimeZone.getTimeZone("GMT+08"));
                 Date date = format.parse(options.getString(MINIMUM_DATE));
-                args.putInt(MINIMUM_DATE, Integer.parseInt(format.format(date)));
+                startDate = Calendar.getInstance(TimeZone.getTimeZone("GMT+08"));
+                startDate.setTime(date);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -230,15 +226,13 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 SimpleDateFormat format = new SimpleDateFormat("yyyy", Locale.CHINA);
                 format.setTimeZone(TimeZone.getTimeZone("GMT+08"));
                 Date date = format.parse(options.getString(MAXIMUM_DATE));
-                args.putInt(MAXIMUM_DATE, Integer.parseInt(format.format(date)));
+                endDate = Calendar.getInstance(TimeZone.getTimeZone("GMT+08"));
+                endDate.setTime(date);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-
-        if (options.hasKey(DATEPICKER_MODE) && !options.isNull(DATEPICKER_MODE)) {
-            args.putString(DATEPICKER_MODE, options.getString(DATEPICKER_MODE));
-        }
+        pickerBuilder.setRangDate(startDate,endDate);
 
         if (options.hasKey(YEAR_TEXT) && !options.isNull(YEAR_TEXT)) {
             args.putString(YEAR_TEXT, options.getString(YEAR_TEXT));
@@ -253,8 +247,56 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
         if (options.hasKey(HOURS_TEXT) && !options.isNull(HOURS_TEXT)) {
             args.putString(HOURS_TEXT, options.getString(HOURS_TEXT));
         }
-        if (options.hasKey(MINIMUM_DATE) && !options.isNull(MINIMUM_DATE)) {
-            args.putString(MINIMUM_DATE, options.getString(MINIMUM_DATE));
+        if (options.hasKey(MINUTES_TEXT)&&!options.isNull(MINUTES_TEXT)){
+            args.putString(MINUTES_TEXT,options.getString(MINUTES_TEXT));
+        }
+        if (options.hasKey(SECONDS_TEXT)&&!options.isNull(SECONDS_TEXT)){
+            args.putString(SECONDS_TEXT,options.getString(SECONDS_TEXT));
+        }
+        if (options.hasKey(WHEEL_BG_COLOR) && !options.isNull(WHEEL_BG_COLOR)) {
+            pickerBuilder.setBgColor(options.getInt(WHEEL_BG_COLOR));
+        }
+        if (options.hasKey(TITLE_BG_COLOR) && !options.isNull(TITLE_BG_COLOR)) {
+            pickerBuilder.setTitleBgColor(options.getInt(TITLE_BG_COLOR));
+        }
+        if (options.hasKey(DONE_CANCEL_SIZE) && !options.isNull(DONE_CANCEL_SIZE)) {
+            pickerBuilder.setSubCalSize(options.getInt(DONE_CANCEL_SIZE));
+        }
+        if (options.hasKey(TITLE_SIZE) && !options.isNull(TITLE_SIZE)) {
+            pickerBuilder.setTitleSize(options.getInt(TITLE_SIZE));
+        }
+        if (options.hasKey(CONTENT_SIZE) && !options.isNull(CONTENT_SIZE)) {
+            pickerBuilder.setContentSize(options.getInt(CONTENT_SIZE));
+        }
+        if (options.hasKey(CANCEL_ENABLE) && !options.isNull(CANCEL_ENABLE)) {
+            pickerBuilder.setOutSideCancelable(options.getBoolean(CANCEL_ENABLE));
+        }
+        if (options.hasKey(IS_CENTER_LABEL) && !options.isNull(IS_CENTER_LABEL)) {
+            pickerBuilder.isCenterLabel(options.getBoolean(IS_CENTER_LABEL));
+        }
+        if (options.hasKey(OUT_TEXT_COLOR) && !options.isNull(OUT_TEXT_COLOR)) {
+            pickerBuilder.setTextColorOut(options.getInt(OUT_TEXT_COLOR));
+        }
+        if (options.hasKey(CENTER_TEXT_COLOR) && !options.isNull(CENTER_TEXT_COLOR)) {
+            pickerBuilder.setTextColorCenter(options.getInt(CENTER_TEXT_COLOR));
+        }
+        if (options.hasKey(DIVIDER_COLOR) && !options.isNull(DIVIDER_COLOR)) {
+            pickerBuilder.setDividerColor(options.getInt(DIVIDER_COLOR));
+        }
+        if (options.hasKey(SHADE_BG_COLOR) && !options.isNull(SHADE_BG_COLOR)) {
+            pickerBuilder.setBackgroundId(options.getInt(SHADE_BG_COLOR));
+        }
+        if (options.hasKey(LINE_SPACING_MULTIPLIER) && !options.isNull(LINE_SPACING_MULTIPLIER)) {
+            pickerBuilder.setLineSpacingMultiplier((float) options.getDouble(LINE_SPACING_MULTIPLIER));
+        }
+        if (options.hasKey(DIVIDER_TYPE) && !options.isNull(DIVIDER_TYPE)) {
+            if ("fill".equals(options.getString(DIVIDER_TYPE)))
+                pickerBuilder.setDividerType(WheelView.DividerType.FILL);
+            else if ("wrap".equals(options.getString(DIVIDER_TYPE)))
+                pickerBuilder.setDividerType(WheelView.DividerType.WRAP);
+        }
+        if (options.hasKey(IS_CYCLIC)&&!options.isNull(IS_CYCLIC)){
+            pickerBuilder.isCyclic(options.getBoolean(IS_CYCLIC));
         }
 
         return args;
