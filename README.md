@@ -174,6 +174,21 @@ DataPicker.show({
 | dayText | string | '日' | android only |
 | hoursText | string | '时' | android only |
 | minutesText | string | '分' | android only |
+| secondsText | string | '秒' | android only |
+| wheelBgColor | string |  | '滚轮背景颜色' android only |
+| titleBgColor | string |  | '标题栏背景颜色'android only |
+| doneCancelSize | int | 17 | '确定取消按钮大小'android only |
+| titleSize | int | 18 | '标题文字大小'android only |
+| contentSize | int | 18 | '内容文字大小'android only |
+| cancelEnabel | boolean | true | '是否能取消'android only |
+| isCenterLable | boolean | true | '是否只显示中间的label'android only |
+| outTextColor | string |  | '分割线以外的文字颜色'android only |
+| centerTextColor | string |  | '分割线之间的文字颜色'android only |
+| dividerColor | string |  | '分割线的颜色'android only |
+| shadeBgColor | string |  | '遮罩层背景色'android only |
+| lineSpacingMultiplier | float | 1.6f | '条目间距倍数'android only |
+| dividerType | string |  | '分割线类型：fill or wrap'android only |
+| isCyclic | boolean | false | '滚轮是否循环' android only |
 | numberOfComponents | int | 1 |  |
 | dataSource | array |  |  |
 | defaultSelected | array |  |  |
