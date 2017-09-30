@@ -37,7 +37,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
     private static final String REACT_CLASS = "RNKitASDatePicker";
     private static final String ERROR_NO_ACTIVITY = "E_NO_ACTIVITY";
     final ReactApplicationContext reactContext;
-    private static Boolean isCallBack = false;
+    private Callback mCallback;
 
     private TimePickerView.Builder pickerBuilder;
 
@@ -87,7 +87,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
 
     @ReactMethod
     public void showWithArgs(@Nullable final ReadableMap options, @Nullable final Callback callback) {
-        isCallBack = false;
+        this.mCallback = callback;
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -99,7 +99,6 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                 pickerBuilder = new TimePickerView.Builder(activity, new DatePickerView.OnTimeSelectListener() {
                     @Override
                     public void onTimeSelect(Date date, View v) {
-                        isCallBack = true;
                         SimpleDateFormat format = null;
                         if (datePickerMode==null){
                             format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
@@ -117,7 +116,8 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                         map.putString("type", "done");
                         map.putString("selectedDate", format.format(date));
 
-                        callback.invoke(map);
+                        if (mCallback != null) mCallback.invoke(map);
+                        mCallback = null;
                     }
                 });
                 Bundle args = createFragmentArguments(options);
@@ -127,27 +127,23 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
 
                 DatePickerView pvTime = new DatePickerView(pickerBuilder);
 
-
-
                 pvTime.setOnTimeCancelListener(new DatePickerView.OnTimeCancelListener() {
                     @Override
                     public void onCancel() {
-                        isCallBack = true;
                         WritableMap map = Arguments.createMap();
                         map.putString("type", "cancel");
-                        callback.invoke(map);
+                        if (mCallback != null) mCallback.invoke(map);
+                        mCallback = null;
                     }
                 });
 
                 pvTime.setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss(Object o) {
-                        if (!isCallBack) {
-                            isCallBack = true;
-                            WritableMap map = Arguments.createMap();
-                            map.putString("type", "cancel");
-                            callback.invoke(map);
-                        }
+                        WritableMap map = Arguments.createMap();
+                        map.putString("type", "cancel");
+                        if (mCallback != null) mCallback.invoke(map);
+                        mCallback = null;
                     }
                 });
 
@@ -157,7 +153,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
     }
 
     private boolean[] getDatePickerType(String type) {
-        if (type==null)
+        if (type == null)
             return new boolean[]{true,true,true,true,true,true};
         else if (type.equals("time")) {
             return new boolean[]{false,false,false,true,true,true};

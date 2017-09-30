@@ -39,7 +39,7 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
     private static final String REACT_CLASS = "RNKitASDataPicker";
     private static final String ERROR_NO_ACTIVITY = "E_NO_ACTIVITY";
     final ReactApplicationContext reactContext;
-    private static Boolean isCallBack = false;
+    private Callback mCallback;
 
     private ArrayList<ProvinceBean> options1Items = new ArrayList<>();
     private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
@@ -87,11 +87,9 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
         return REACT_CLASS;
     }
 
-
-
     @ReactMethod
     public void showWithArgs(@Nullable final ReadableMap options, @Nullable final Callback callback) {
-        isCallBack = false;
+        this.mCallback = callback;
         UiThreadUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -102,7 +100,6 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
                 pickerProperty = new OptionsPickerView.Builder(activity, new OptionsPickerView.OnOptionsSelectListener() {
                     @Override
                     public void onOptionsSelect(int selectOptions1, int selectOptions2, int selectOptions3, View v) {
-                        isCallBack = true;
                         WritableMap map = Arguments.createMap();
                         map.putString("type", "done");
                         int numberOfComponents = args.getInt(NUMBER_OF_COMPONENTS);
@@ -126,7 +123,8 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
                         map.putArray("selectedData", selectedData);
                         map.putArray("selectedIndex", selectedIndex);
 
-                        callback.invoke(map);
+                        if (mCallback != null) mCallback.invoke(map);
+                        mCallback = null;
                     }
                 });
                 args = createFragmentArguments(options);
@@ -156,23 +154,20 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
                 pvOptions.setOnTimeCancelListener(new DataPickerView.OnTimeCancelListener() {
                     @Override
                     public void onCancel() {
-                        isCallBack = true;
-
                         WritableMap map = Arguments.createMap();
                         map.putString("type", "cancel");
-                        callback.invoke(map);
+                        if (mCallback != null) mCallback.invoke(map);
+                        mCallback = null;
                     }
                 });
 
                 pvOptions.setOnDismissListener(new OnDismissListener() {
                     @Override
                     public void onDismiss(Object o) {
-                        if (!isCallBack) {
-                            isCallBack = true;
-                            WritableMap map = Arguments.createMap();
-                            map.putString("type", "cancel");
-                            callback.invoke(map);
-                        }
+                        WritableMap map = Arguments.createMap();
+                        map.putString("type", "cancel");
+                        if (mCallback != null) mCallback.invoke(map);
+                        mCallback = null;
                     }
                 });
 
@@ -181,12 +176,10 @@ public class ASDataPickerViewModule extends ReactContextBaseJavaModule implement
         });
     }
 
-
     private void setPickerDataSource(ReadableArray dataSource, OptionsPickerView pvOptions) {
         options2Items.clear();
         options1Items.clear();
         options3Items.clear();
-
 
         for (int i = 0; i < dataSource.size(); i++) {
             try {
