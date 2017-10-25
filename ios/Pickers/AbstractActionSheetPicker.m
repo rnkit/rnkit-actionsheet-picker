@@ -246,7 +246,7 @@ CG_INLINE BOOL isIPhone4() {
     [masterView addSubview:self.toolbar];
 
     //ios7 picker draws a darkened alpha-only region on the first and last 8 pixels horizontally, but blurs the rest of its background.  To make the whole popup appear to be edge-to-edge, we have to add blurring to the remaining left and right edges.
-    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1) {
+    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_6_1 && !(IS_IPAD)) {
         CGRect rect = CGRectMake(0, self.toolbar.frame.origin.y, _borderWidth, masterView.frame.size.height - self.toolbar.frame.origin.y);
         UIToolbar *leftEdge = [[UIToolbar alloc] initWithFrame:rect];
         rect.origin.x = masterView.frame.size.width - _borderWidth;
@@ -314,14 +314,18 @@ CG_INLINE BOOL isIPhone4() {
 }
 
 - (void)dismissPicker {
+    bool animated = YES;
+    if (IS_IPAD) {
+        animated = NO;
+    }
 #if __IPHONE_4_1 <= __IPHONE_OS_VERSION_MAX_ALLOWED
     if (self.actionSheet)
 #else
         if (self.actionSheet && [self.actionSheet isVisible])
 #endif
-        [_actionSheet dismissWithClickedButtonIndex:0 animated:YES];
+        [_actionSheet dismissWithClickedButtonIndex:0 animated:animated];
     else if (self.popOverController && self.popOverController.popoverVisible)
-        [_popOverController dismissPopoverAnimated:YES];
+        [_popOverController dismissPopoverAnimated:animated];
     self.actionSheet = nil;
     self.popOverController = nil;
     self.selfReference = nil;
@@ -474,8 +478,13 @@ CG_INLINE BOOL isIPhone4() {
 
     pickerToolbar.barTintColor = self.toolbarBackgroundColor;
     pickerToolbar.tintColor = self.toolbarButtonsColor;
-    pickerToolbar.layer.borderWidth = 1;
-    pickerToolbar.layer.borderColor = [[UIColor colorWithRed:0.812 green:0.839 blue:0.859 alpha:1] CGColor];
+    if (IS_IPAD) {
+        pickerToolbar.layer.borderWidth = 0;
+        pickerToolbar.layer.borderColor = [[UIColor colorWithWhite:1 alpha:0] CGColor];
+    } else {
+        pickerToolbar.layer.borderWidth = 1;
+        pickerToolbar.layer.borderColor = [[UIColor colorWithRed:0.812 green:0.839 blue:0.859 alpha:1] CGColor];
+    }
 
     NSMutableArray *barItems = [[NSMutableArray alloc] init];
 
@@ -748,8 +757,16 @@ CG_INLINE BOOL isIPhone4() {
     }
     else if ((self.containerView)) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [popover presentPopoverFromRect:_containerView.bounds inView:_containerView
-                   permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            if (IS_IPAD) {
+                CGRect cotainerViewframe = _containerView.bounds;
+                CGFloat popoverPointX = (cotainerViewframe.size.width) / 2;
+                CGFloat popoverPointY = (cotainerViewframe.size.height) / 2;
+                [popover presentPopoverFromRect:CGRectMake(popoverPointX, popoverPointY, 0, 0) inView:_containerView
+                       permittedArrowDirections:0 animated:YES];
+            } else {
+                [popover presentPopoverFromRect:_containerView.bounds inView:_containerView
+                       permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            }
 
         });
         return;
@@ -801,4 +818,3 @@ CG_INLINE BOOL isIPhone4() {
 }
 
 @end
-
