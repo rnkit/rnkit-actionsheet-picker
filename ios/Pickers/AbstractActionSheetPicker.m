@@ -482,8 +482,12 @@ CG_INLINE BOOL isIPhone4() {
         pickerToolbar.layer.borderWidth = 0;
         pickerToolbar.layer.borderColor = [[UIColor colorWithWhite:1 alpha:0] CGColor];
     } else {
-        pickerToolbar.layer.borderWidth = 1;
-        pickerToolbar.layer.borderColor = [[UIColor colorWithRed:0.812 green:0.839 blue:0.859 alpha:1] CGColor];
+        CALayer *bottomBorder = [CALayer layer];
+        bottomBorder.frame = CGRectMake(0.0f, pickerToolbar.frame.size.height - 1.0f, pickerToolbar.frame.size.width, 0.5f);
+        bottomBorder.backgroundColor = [[UIColor colorWithRed:0.812 green:0.839 blue:0.859 alpha:1] CGColor];
+        [pickerToolbar.layer addSublayer:bottomBorder];
+        pickerToolbar.layer.borderColor = [[UIColor whiteColor] CGColor];
+        pickerToolbar.clipsToBounds = NO;
     }
 
     NSMutableArray *barItems = [[NSMutableArray alloc] init];
