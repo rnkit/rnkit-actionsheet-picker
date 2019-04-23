@@ -106,7 +106,7 @@ public class ASDatePickerViewModule extends ReactContextBaseJavaModule implement
                             format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
                         } else if (datePickerMode.equals("time")) {
                             format = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
-                        } else if (datePickerMode.equals("dateTime")) {
+                        } else if (datePickerMode.equals("datetime")) {
                             format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
                         }
 
