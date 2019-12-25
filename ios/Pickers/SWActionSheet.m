@@ -108,7 +108,11 @@ static const enum UIViewAnimationOptions options = UIViewAnimationOptionCurveEas
         view = aView;
         self.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.0f];
         _bgView = [UIView new];
-        _bgView.backgroundColor = [UIColor colorWithRed:247.f/255.f green:247.f/255.f blue:247.f/255.f alpha:1.0f];
+        if (@available(iOS 13.0, *)) {
+            _bgView.backgroundColor = UIColor.systemBackgroundColor;
+        } else {
+            _bgView.backgroundColor = [UIColor colorWithRed:247.f/255.f green:247.f/255.f blue:247.f/255.f alpha:1.0f];
+        }
         [self addSubview:_bgView];
         [self addSubview:view];
     }
